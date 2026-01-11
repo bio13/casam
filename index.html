@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Convite de Casamento</title>
+    <link rel="icon" type="image/x-icon" href="https://freesvg.org/img/wedding-rings.png">
+
 
     <!-- ESTILIZAÇÃO PARA COMPARTILHAMENTO -->
     <meta property="og:title" content="Convite de Casamento">
@@ -18,9 +20,12 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Euphoria+Script&family=Meow+Script&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Birthstone+Bounce:wght@400;500&display=swap');
 
         body {
-            background-color: #fffee7;
+            background-image: url("./imagens/convite2/fundo.png");
+            background-repeat: round;
+            background-size: contain;
             overflow-x: hidden;
             display: flex;
             justify-content: center;
@@ -30,30 +35,37 @@
             padding: 20px;
         }
 
-        .font-euphoria {
-            font-family: 'Euphoria Script', cursive;
+        /* ================= TIPOGRAFIA ================= */
+        .title {
+            font-family: 'Birthstone Bounce', cursive;
+            color: #c99572;
+            font-size: clamp(2.2rem, 6vw, 3.4rem);
+            margin-bottom: .5rem;
+            -webkit-text-stroke: 2px #c99572;
+            text-shadow: 1px 1px 0 #BA6C37,
+                2.3px 2.3px 0 #BA6C37;
         }
 
-        .font-meow {
-            font-family: 'Meow Script', cursive;
+        .text {
+            font-family: 'Alex Brush', cursive;
+            color: #b97a45;
+            font-size: clamp(.95rem, 3.2vw, 1.1rem);
+            line-height: 1.4;
+            -webkit-text-stroke: 0.5px #b97a45;
+            text-shadow: inset #977854 0 20px;
         }
 
-        .text-gold {
-            color: #834c21;
-            text-shadow: 0.7px 0.7px 0 #d29c55;
+        .bloco-texto {
+            margin-top: .5rem;
         }
 
-        .title-gold {
-            color: #834c21;
-            text-shadow: #ba6c37 1px 1px, #d29c55 3px 3px, #fddf96 5px 5px;
-        }
-
+        /* ================= ENVELOPE ================ */
         .envelope-wrapper {
             position: relative;
             width: 100%;
             max-width: 600px;
             aspect-ratio: 3 / 2;
-            cursor: pointer;
+            cursor: default;
             margin-top: 150px;
             clip-path: inset(-500px -500px 0px -500px);
         }
@@ -89,13 +101,113 @@
             transition: transform 0.8s ease-in-out 1.5s, z-index 0s 1.9s;
         }
 
+        /* ================= CARTÃO 3D (CONVITE) ================= */
+        .card-container {
+            position: relative;
+            width: 100%;
+            max-width: 780px;
+            height: 100%;
+            perspective: 1400px;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 380px;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+        }
+
+        /* estado virado */
+        .card.virado {
+            transform: rotateY(180deg);
+        }
+
+        /* faces */
+        .face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        /* verso */
+        .back {
+            transform: rotateY(180deg);
+        }
+
+        .convite {
+            position: absolute;
+            inset: 0;
+            background: #ffedcb;
+            border: 3px solid #8b5a2b;
+            padding: clamp(20px, 6vw, 42px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        /* ================= DECORAÇÕES ================= */
+        .decor {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Borboletas */
+        .borboleta-esq {
+            top: 18%;
+            left: 15%;
+            width: 3%;
+        }
+
+        .borboleta-dir {
+            top: 15%;
+            right: 13%;
+            width: 3%;
+        }
+
+        /* Flores */
+        .flores-top {
+            top: 0;
+            left: 0;
+            width: 40%;
+        }
+
+        .flores-bottom {
+            bottom: 0;
+            right: 0;
+            width: 20%;
+        }
+
+        /* Laços */
+        .laco-inf {
+            bottom: -6.5%;
+            left: -1.5%;
+            width: 25%;
+        }
+
+        .laco-sup {
+            top: -7.5%;
+            right: -1.5%;
+            width: 25%;
+        }
+
+        /* Caixa data/local */
+        .data {
+            font-size: clamp(1rem, 3.4vw, 1.2rem);
+            margin-top: 0.5rem;
+        }
+
         /* ================= CONVITE ================= */
         #convite {
             position: absolute;
             left: 50%;
             top: 20px;
             transform: translateX(-50%);
-            width: 90%;
+            width: 100%;
+            max-width: 780px;
+            height: 380px;
             z-index: 20;
             visibility: hidden;
         }
@@ -131,7 +243,7 @@
             }
 
             100% {
-                top: -240px;
+                top: -170px;
                 z-index: 50;
             }
         }
@@ -178,59 +290,164 @@
 
         .wing {
             position: absolute;
-            width: 50%;
+            width: 52%;
             height: 100%;
             top: 0;
-            /* Degradê suave: Branco perolado para Dourado claro */
-            background: linear-gradient(135deg, #ffffff 0%, #f9e9ba 100%);
-            border: 0.5px solid #d29c55;
+            background:
+                radial-gradient(circle at 35% 30%,
+                    #ffffffe6,
+                    #ffffff73 40%,
+                    #ffefc859 60%,
+                    transparent 72%);
+            border: 1px solid #d29c5573;
+            box-shadow:
+                inset 0 0 6px #ffffff99,
+                0 4px 6px #00000026;
         }
 
         .wing-l {
-            left: 0;
-            /* Formato de asa mais arredondado e delicado */
-            border-radius: 60% 20% 20% 60%;
-            transform-origin: right center;
-            animation: flap-l 0.5s infinite alternate ease-in-out;
+            left: -3px;
+            border-radius: 75% 85% 90% 80% / 80% 95% 75% 90%;
+            transform-origin: 100% 60%;
+            animation: flap-l 0.65s infinite cubic-bezier(.4, 0, .25, 1);
         }
 
         .wing-r {
-            right: 0;
-            border-radius: 20% 60% 60% 20%;
-            transform-origin: left center;
-            animation: flap-r 0.5s infinite alternate ease-in-out;
+            right: -3px;
+            border-radius: 85% 75% 80% 90% / 95% 80% 90% 75%;
+            transform-origin: 0% 60%;
+            animation: flap-r 0.65s infinite cubic-bezier(.4, 0, .25, 1);
         }
 
-        /* Corpo quase imperceptível, apenas para dar estrutura */
-        .butterfly-body {
+        .antenna {
             position: absolute;
-            top: 20%;
+            top: 18%;
+            width: 2px;
+            height: 10px;
+            background: linear-gradient(to bottom, #caa07a, #8f623f);
+            border-radius: 10px;
+            z-index: 4;
+            transform-origin: bottom center;
+            animation: antenna-wiggle 1.8s ease-in-out infinite;
+        }
+
+        .antenna-l {
+            left: 46%;
+            transform: rotate(-28deg);
+        }
+
+        .antenna-r {
+            right: 46%;
+            transform: rotate(28deg);
+        }
+
+        /* Bolinha fofa na ponta */
+        .antenna::after {
+            content: '';
+            position: absolute;
+            top: -3px;
             left: 50%;
             transform: translateX(-50%);
-            width: 2px;
-            height: 18px;
-            background: #a67c52;
-            border-radius: 5px;
-            z-index: 2;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #fff6dc, #caa07a);
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
         }
 
-        @keyframes flap-l {
-            from {
-                transform: rotateY(10deg);
+        @keyframes antenna-wiggle {
+            0% {
+                transform: rotate(var(--rot)) translateY(0);
             }
 
-            to {
-                transform: rotateY(75deg);
+            50% {
+                transform: rotate(calc(var(--rot) * 0.7)) translateY(1px);
+            }
+
+            100% {
+                transform: rotate(var(--rot)) translateY(0);
+            }
+        }
+
+        .antenna-l {
+            --rot: -28deg;
+        }
+
+        .antenna-r {
+            --rot: 28deg;
+        }
+
+        .butterfly-body {
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 16px;
+            background: linear-gradient(to bottom,
+                    #caa07a,
+                    #a67c52);
+            border-radius: 50px;
+            z-index: 3;
+            box-shadow:
+                inset 0 2px 3px rgba(255, 255, 255, .4),
+                inset 0 -2px 3px rgba(0, 0, 0, .15),
+                0 2px 5px rgba(0, 0, 0, .25);
+            animation: body-breathe 2.4s ease-in-out infinite;
+        }
+
+        @keyframes body-breathe {
+            0% {
+                transform: translateX(-50%) scale(1, 1);
+            }
+
+            40% {
+                transform: translateX(-50%) scale(1.12, 0.92);
+            }
+
+            70% {
+                transform: translateX(-50%) scale(0.96, 1.05);
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1, 1);
+            }
+        }
+
+
+        @keyframes flap-l {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            45% {
+                transform: rotate(-38deg) scale(0.9, 1.05);
+            }
+
+            70% {
+                transform: rotate(-18deg) scale(1.06, 0.95);
+            }
+
+            100% {
+                transform: rotate(0deg) scale(1);
             }
         }
 
         @keyframes flap-r {
-            from {
-                transform: rotateY(-10deg);
+            0% {
+                transform: rotate(0deg) scale(1);
             }
 
-            to {
-                transform: rotateY(-75deg);
+            45% {
+                transform: rotate(38deg) scale(0.9, 1.05);
+            }
+
+            70% {
+                transform: rotate(18deg) scale(1.06, 0.95);
+            }
+
+            100% {
+                transform: rotate(0deg) scale(1);
             }
         }
 
@@ -262,7 +479,7 @@
             }
 
             100% {
-                transform: translate(-220px, -400px) rotate(-40deg) scale(0.6);
+                transform: translate(-250px, -430px) rotate(-60deg) scale(0.6);
                 opacity: 0;
             }
         }
@@ -284,7 +501,7 @@
             }
 
             100% {
-                transform: translate(-100px, -450px) rotate(-15deg) scale(0.5);
+                transform: translate(-120px, -450px) rotate(-30deg) scale(0.5);
                 opacity: 0;
             }
         }
@@ -299,39 +516,133 @@
                 opacity: 0;
             }
         }
+
+
+        /* ================= BOTÕES ================= */
+        .btn-virar {
+            margin-top: 16px;
+            background: transparent;
+            border: 1px solid #8b5a2b;
+            color: #8b5a2b;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-family: 'Alex Brush', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all .3s ease;
+        }
+
+        .btn-virar:hover {
+            background: #8b5a2b;
+            color: #fffbd8;
+        }
+
+        .btn-abrir {
+            position: absolute;
+            bottom: 5%;
+            background-color: #fffbd8;
+            border: 1px solid #8b5a2b;
+            padding: 0.5rem;
+            border-radius: 25px;
+            font-size: large;
+            font-weight: 600;
+            color: #8b5a2b;
+        }
+
+        .botao {
+            background-color: #fffbd8;
+            border: 1px solid #8b5a2b;
+            padding: 0.5rem;
+            border-radius: 25px;
+            font-size: large;
+            font-weight: 600;
+            color: #8b5a2b;
+        }
+
+
+        /* ================== RESPONSIVIDADE MOBILE ================= */
+        @media (max-width: 520px) {
+            #convite {
+                height: 340px;
+            }
+
+            .card {
+                min-height: 340px;
+            }
+
+            .laco-sup {
+                top: -6%;
+                width: 35%;
+            }
+
+            .laco-inf {
+                bottom: -6%;
+                width: 35%;
+            }
+
+            .div-data-local {
+                visibility: hidden;
+            }
+
+            .data {
+                font-size: medium;
+                border-left: 1px linear-gradient(#8b5a2b, #ffedcb);
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div class="w-full h-full z-0 absolute bg-white" style="opacity: 45%;"></div>
 
-    <div class="envelope-wrapper" id="mainWrapper" onclick="toggleConvite()">
+    <div class="envelope-wrapper" id="mainWrapper">
 
         <div class="butterfly b1" style="left:49%; top:45%">
+
             <div class="wings-container">
                 <div class="wing wing-l"></div>
                 <div class="wing wing-r"></div>
             </div>
+
+            <div class="antenna antenna-l"></div>
+            <div class="antenna antenna-r"></div>
+
             <div class="butterfly-body"></div>
         </div>
         <div class="butterfly b2" style="left:51%; top:45%">
+
             <div class="wings-container">
                 <div class="wing wing-l"></div>
                 <div class="wing wing-r"></div>
             </div>
+
+            <div class="antenna antenna-l"></div>
+            <div class="antenna antenna-r"></div>
+
             <div class="butterfly-body"></div>
         </div>
         <div class="butterfly b3" style="left:50%; top:42%">
+
             <div class="wings-container">
                 <div class="wing wing-l"></div>
                 <div class="wing wing-r"></div>
             </div>
+
+            <div class="antenna antenna-l"></div>
+            <div class="antenna antenna-r"></div>
+
             <div class="butterfly-body"></div>
         </div>
         <div class="butterfly b4" style="left:50%; top:46%">
+
             <div class="wings-container">
                 <div class="wing wing-l"></div>
                 <div class="wing wing-r"></div>
             </div>
+
+            <div class="antenna antenna-l"></div>
+            <div class="antenna antenna-r"></div>
+
             <div class="butterfly-body"></div>
         </div>
 
@@ -340,118 +651,222 @@
 
         <div class="inner-mask">
             <div id="convite">
-                <div class="relative isolate w-full border-4 border-[#834c21] bg-[#fdfbd4] p-4 sm:p-10 shadow-2xl">
 
-                    <img src="canto_florido1.png" class="absolute -top-3 -left-3 w-16 sm:w-40 z-20" />
-                    <img src="canto_florido2.png" class="absolute -top-3 -right-3 w-16 sm:w-40 z-20" />
-                    <img src="canto_florido3.png" class="absolute -bottom-3 -left-3 w-16 sm:w-40 z-20" />
-                    <img src="canto_florido4.png" class="absolute -bottom-3 -right-3 w-16 sm:w-40 z-20" />
+                <div class="card-container">
+                    <div class="card" id="card">
 
-                    <div class="relative z-20 text-center space-y-4">
-                        <h1 class="font-euphoria title-gold text-4xl sm:text-5xl md:text-7xl">
+                        <!-- FRENTE -->
+                        <div class="face convite text-center">
 
-                            Sofia
+                            <!-- BORBOLETAS -->
+                            <img src="./imagens/convite2/borboleta_esquerda.png" class="decor borboleta-esq">
+                            <img src="./imagens/convite2/borboleta_direita.png" class="decor borboleta-dir">
 
-                            <img src="coracoes_unidos.png"
-                                class="inline-block w-8 sm:w-10 md:w-14 mx-2 align-middle" />
+                            <!-- FLORES -->
+                            <img src="./imagens/convite2/flores_superior_esquerdo.png" class="decor flores-top">
+                            <img src="./imagens/convite2/flores_inferior_direito.png" class="decor flores-bottom">
 
-                            Levi
+                            <!-- LAÇOS -->
+                            <img src="./imagens/convite2/laço_inferior_esquerdo.png" class="decor laco-inf">
+                            <img src="./imagens/convite2/laço_superior_direito.png" class="decor laco-sup">
 
-                        </h1>
+                            <h1 class="title">Sofia <span class="mx-5">e</span> Levi</h1>
 
+                            <div class="bloco-texto text max-w-md mx-auto">
+                                <p>
+                                    Com o coração cheio de amor convidamos você para estar conosco no dia mais
+                                    importante
+                                    das nossas vidas, nosso casamento.
+                                    <br>
+                                    Será uma alegria imensa celebrar esse momento com quem faz parte da nossa história.
+                                </p>
+                            </div>
 
+                            <div class="flex justify-center div-data-local mt-2">
+                                <img src="./imagens/convite2/caixa_data_local.png" class="decor">
+                            </div>
+                            <div class="data text mt-2">
+                                Dia 23 de outubro às 13:00<br>
+                                Santuário Nacional de Nossa Senhora Aparecida
+                            </div>
 
-                        <img src="linha_entre_paragrafos.png" class="mx-auto w-32 sm:w-40 md:w-56" />
+                            <p class="text mt-4">
+                                Esperamos você com alegria.
+                            </p>
 
+                        </div>
 
+                        <!-- VERSO -->
+                        <div class="face back convite text-center">
 
-                        <p class="font-meow text-gold text-base sm:text-lg md:text-xl leading-relaxed max-w-xl mx-auto">
+                            <p class="text max-w-md mx-auto mt-6">
+                                Aqui você pode escrever:
+                                <br><br>
+                                • Mensagem aos convidados<br>
+                                • Lista de presentes<br>
+                                • Versículo bíblico<br>
+                                • Confirmação de presença<br>
+                                • QR Code<br>
+                                • Agradecimento especial
+                            </p>
 
-                            Com o coração cheio de amor convidamos você para estar conosco no dia mais importante
-
-                            das nossas
-
-                            vidas,
-
-                            nosso casamento.
-
-                            <br>
-
-                            Será uma alegria imensa celebrar esse momento com quem faz parte da nossa história.
-
-                        </p>
-
-
-
-                        <img src="linha_entre_paragrafos.png" class="mx-auto w-32 sm:w-40 md:w-56" />
-
-
-
-                        <p class="font-meow text-gold text-lg sm:text-xl md:text-2xl">
-
-                            Dia 23 de outubro às 13:00
-
-                            <br>
-
-                            Santuário Nacional de Nossa Senhora Aparecida
-
-                        </p>
-
-
-
-                        <img src="borboleta.png" class="mx-auto w-7 sm:w-8 mt-4" />
-
-
-
-                        <p class="font-meow text-gold text-base sm:text-lg md:text-xl mt-1">
-
-                            Esperamos você com alegria.
-
-                        </p>
+                        </div>
 
                     </div>
-
-
-
-                    <!-- Detalhe horizontal inferior -->
-
-                    <img src="detalhe_horizontal.png"
-                        class="absolute bottom-1 sm:-bottom-4 left-1/2 -translate-x-1/2 w-36 sm:w-40 md:w-56 rotate-180 z-10" />
                 </div>
+
+                <button onclick="abrirModal()" class="botao">👁️</button>
+                <button onclick="virarConvite()" class="btn-virar">↺</button>
+
             </div>
         </div>
     </div>
     </div>
 
-    <script>
-        function toggleConvite() {
-            const wrapper = document.getElementById('mainWrapper');
-            const isOpening = !wrapper.classList.contains('open');
+    <button onclick="toggleConvite()" class="btn-abrir">📜</button>
 
-            if (isOpening) {
-                wrapper.classList.remove('closing');
-                wrapper.classList.add('open');
 
-                // Ativa o voo de cada borboleta
-                wrapper.querySelector('.b1').classList.add('fly-1');
-                wrapper.querySelector('.b2').classList.add('fly-2');
-                wrapper.querySelector('.b3').classList.add('fly-3');
-                wrapper.querySelector('.b4').classList.add('fly-4');
-            } else {
-                wrapper.classList.remove('open');
-                wrapper.classList.add('closing');
+    <!-- MODAL -->
+    <div id="modalConvite" class="
+    fixed inset-0 z-50
+    hidden
+    bg-black/70
+    flex items-center justify-center
+    p-4
+    w-screen
+  ">
 
-                // Remove as classes após a animação para poder repetir
-                setTimeout(() => {
-                    ['fly-1', 'fly-2', 'fly-3', 'fly-4'].forEach((cls, i) => {
-                        wrapper.querySelector('.b' + (i + 1)).classList.remove(cls);
-                    });
-                }, 2500);
-            }
-        }
-    </script>
+        <!-- CONTEÚDO DO MODAL -->
+        <div class="
+      relative
+      w-full max-w-3xl
+      max-h-[90vh]
+      overflow-y-auto
+    ">
+
+            <!-- BOTÃO FECHAR -->
+            <button onclick="fecharModal()" class="botao" aria-label="Fechar convite">
+                ✕
+            </button>
+
+            <!-- CARD 3D (SEU CONVITE INTEIRO) -->
+            <div class="card-container mx-auto">
+
+                <div class="card" id="cardModal">
+
+                    <!-- FRENTE -->
+                    <div class="face front convite text-center">
+                        <!-- BORBOLETAS -->
+                        <img src="./imagens/convite2/borboleta_esquerda.png" class="decor borboleta-esq">
+                        <img src="./imagens/convite2/borboleta_direita.png" class="decor borboleta-dir">
+
+                        <!-- FLORES -->
+                        <img src="./imagens/convite2/flores_superior_esquerdo.png" class="decor flores-top">
+                        <img src="./imagens/convite2/flores_inferior_direito.png" class="decor flores-bottom">
+
+                        <!-- LAÇOS -->
+                        <img src="./imagens/convite2/laço_inferior_esquerdo.png" class="decor laco-inf">
+                        <img src="./imagens/convite2/laço_superior_direito.png" class="decor laco-sup">
+
+                        <h1 class="title">Sofia <span class="mx-5">e</span> Levi</h1>
+
+                        <div class="bloco-texto text max-w-md mx-auto">
+                            <p>
+                                Com o coração cheio de amor convidamos você para estar conosco no dia mais
+                                importante
+                                das nossas vidas, nosso casamento.
+                                <br>
+                                Será uma alegria imensa celebrar esse momento com quem faz parte da nossa história.
+                            </p>
+                        </div>
+
+                        <div class="flex justify-center div-data-local mt-2">
+                            <img src="./imagens/convite2/caixa_data_local.png" class="decor">
+                        </div>
+                        <div class="data text mt-2">
+                            Dia 23 de outubro às 13:00<br>
+                            Santuário Nacional de Nossa Senhora Aparecida
+                        </div>
+
+                        <p class="text mt-4">
+                            Esperamos você com alegria.
+                        </p>
+                    </div>
+
+                    <!-- VERSO -->
+                    <div class="face back convite text-center">
+                        <p class="text max-w-md mx-auto mt-6">
+                            Aqui você pode escrever:
+                            <br><br>
+                            • Mensagem aos convidados<br>
+                            • Lista de presentes<br>
+                            • Versículo bíblico<br>
+                            • Confirmação de presença<br>
+                            • QR Code<br>
+                            • Agradecimento especial
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- BOTÃO VIRAR -->
+            <div class="flex justify-center mt-4">
+                <button onclick="virarConviteModal()" class="botao">
+                    ↺
+                </button>
+            </div>
+
+        </div>
+    </div>
+
 </body>
 
+<script>
+    function toggleConvite() {
+        const wrapper = document.getElementById('mainWrapper');
+        const isOpening = !wrapper.classList.contains('open');
+
+        if (isOpening) {
+            wrapper.classList.remove('closing');
+            wrapper.classList.add('open');
+
+            // Ativa o voo de cada borboleta
+            wrapper.querySelector('.b1').classList.add('fly-1');
+            wrapper.querySelector('.b2').classList.add('fly-2');
+            wrapper.querySelector('.b3').classList.add('fly-3');
+            wrapper.querySelector('.b4').classList.add('fly-4');
+        } else {
+            wrapper.classList.remove('open');
+            wrapper.classList.add('closing');
+
+            // Remove as classes após a animação para poder repetir
+            setTimeout(() => {
+                ['fly-1', 'fly-2', 'fly-3', 'fly-4'].forEach((cls, i) => {
+                    wrapper.querySelector('.b' + (i + 1)).classList.remove(cls);
+                });
+            }, 2500);
+        }
+    }
+
+    function virarConvite() {
+        document.getElementById('card').classList.toggle('virado');
+    }
+
+    function abrirModal() {
+        document.getElementById('modalConvite').classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // trava scroll do fundo
+    }
+
+    function fecharModal() {
+        document.getElementById('modalConvite').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        document.getElementById('cardModal').classList.remove('virado');
+    }
+
+    function virarConviteModal() {
+        document.getElementById('cardModal').classList.toggle('virado');
+    }
+</script>
 
 </html>
-
